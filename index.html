@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor de Pautas — Stronger As Fuck</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <div class="app-header">
+    <div>
+      <h1>Editor de Pautas</h1>
+      <p>Rellena los campos, revisa la vista previa y descarga el HTML listo para enviar</p>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      <button class="download-btn" id="verBtn">👁 Ver pauta / Compartir</button>
+      <button class="download-btn secondary-btn" id="downloadBtn">⬇ Descargar (PC)</button>
+    </div>
+    <p class="mobile-hint">📱 En celular: usa "Ver pauta / Compartir" y desde esa pestaña usa el botón de Compartir/Guardar de tu navegador.</p>
+  </div>
+
+  <div class="layout">
+    <div class="panel form-panel">
+
+      <fieldset>
+        <legend>Datos generales</legend>
+        <label>Tipo de pauta (ej: vacaciones, rehabilitación rodilla, mantención)</label>
+        <input type="text" id="tipoPauta" placeholder="vacaciones">
+        <label>Nombre del paciente</label>
+        <input type="text" id="nombrePaciente" placeholder="Nombre Apellido">
+        <label>Mensaje introductorio</label>
+        <textarea id="mensajeIntro" placeholder="Contexto y objetivo general de la pauta para este paciente."></textarea>
+      </fieldset>
+
+      <fieldset>
+        <legend>Datos rápidos</legend>
+        <div class="row3">
+          <div>
+            <label>Frecuencia</label>
+            <input type="text" id="frecuencia" placeholder="3x / semana">
+          </div>
+          <div>
+            <label>Duración</label>
+            <input type="text" id="duracion" placeholder="2 semanas">
+          </div>
+          <div>
+            <label>Tiempo aprox.</label>
+            <input type="text" id="tiempoAprox" placeholder="20–25 min">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Por qué haces esto</legend>
+        <textarea id="porQue" placeholder="Explicación clínica: qué se está trabajando, en qué orden, y por qué."></textarea>
+      </fieldset>
+
+      <fieldset>
+        <legend>Secciones y ejercicios</legend>
+        <div id="secciones"></div>
+        <button class="add-seccion-btn" id="addSeccionBtn" type="button">+ Agregar sección</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Descanso y sesiones</legend>
+        <label>Nota de descanso</label>
+        <input type="text" id="notaDescanso" placeholder="El descanso lo vas viendo tú, pero aprox. 1–2 min entre series.">
+        <div class="row2">
+          <div>
+            <label>N° de semanas</label>
+            <input type="number" id="numSemanas" min="1" max="8" value="2">
+          </div>
+          <div>
+            <label>Sesiones por semana</label>
+            <input type="number" id="sesionesPorSemana" min="1" max="7" value="3">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Nota importante y despedida</legend>
+        <label>Nota importante (después de "Importante:")</label>
+        <textarea id="notaImportante" placeholder="si algún ejercicio te da dolor agudo, más de 3/10 o distinto al habitual, no lo fuerces. Bájale la intensidad, o sáltalo y me cuentas."></textarea>
+        <label>Mensaje de despedida</label>
+        <input type="text" id="despedida" placeholder="Nos vemos a la vuelta!">
+      </fieldset>
+
+    </div>
+
+    <div class="panel preview-panel">
+      <div class="preview-frame-wrap">
+        <p class="preview-label">Vista previa en vivo</p>
+        <iframe id="previewFrame"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/logo.js"></script>
+<script src="assets/pauta-template.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
