@@ -11,7 +11,7 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #000020;
+    --bg: #10163F;
     --card: #1b1b1e;
     --card-border: #2c2c30;
     --ink: #f4f3ef;
