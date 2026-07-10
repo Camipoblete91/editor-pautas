@@ -8,15 +8,15 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pauta de ejercicios — Stronger As Fuck</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #101012;
+    --bg: #000020;
     --card: #1b1b1e;
     --card-border: #2c2c30;
     --ink: #f4f3ef;
     --ink-dim: #a9a8ab;
-    --lime: #5FE3B3;
+    --lime: #B08CFA;
     --orange: #B08CFA;
     --band-green: #3ecf5a;
     --band-red: #e8423f;
@@ -28,7 +28,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
     margin:0;
     background:var(--bg);
     color:var(--ink);
-    font-family:'Archivo', sans-serif;
+    font-family:'Open Sans', sans-serif;
+    font-weight:400;
     -webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:640px;margin:0 auto;padding:0 0 60px;}
@@ -37,12 +38,13 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
   .hero{
     padding:36px 24px 28px;
     background:
-      radial-gradient(circle at 15% -10%, rgba(95,227,179,0.18), transparent 55%),
+      radial-gradient(circle at 15% -10%, rgba(176,140,250,0.18), transparent 55%),
       var(--bg);
     border-bottom:1px solid var(--card-border);
   }
   .brand{
-    font-family:'Archivo Black', sans-serif;
+    font-family:'Open Sans', sans-serif;
+    font-weight:700;
     font-size:15px;
     letter-spacing:0.14em;
     color:var(--lime);
@@ -50,7 +52,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
   }
   .brand span{color:var(--ink);}
   .hero h1{
-    font-family:'Archivo Black', sans-serif;
+    font-family:'Open Sans', sans-serif;
+    font-weight:800;
     font-size:34px;
     line-height:1.05;
     margin:0 0 10px;
@@ -91,7 +94,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
     margin:0 0 4px;
   }
   .chip .value{
-    font-family:'Archivo Black', sans-serif;
+    font-family:'Open Sans', sans-serif;
+    font-weight:700;
     font-size:16px;
     margin:0;
   }
@@ -100,7 +104,7 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
   /* DIAGNOSIS CALLOUT */
   .callout{
     margin:6px 24px 8px;
-    background:linear-gradient(135deg, rgba(95,227,179,0.10), rgba(176,140,250,0.08));
+    background:linear-gradient(135deg, rgba(176,140,250,0.12), rgba(176,140,250,0.06));
     border:1px solid var(--card-border);
     border-radius:14px;
     padding:16px 18px;
@@ -126,7 +130,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
     padding-bottom:8px;
   }
   .section-head h2{
-    font-family:'Archivo Black', sans-serif;
+    font-family:'Open Sans', sans-serif;
+    font-weight:700;
     font-size:15px;
     letter-spacing:0.06em;
     text-transform:uppercase;
@@ -155,7 +160,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
     margin-bottom:8px;
   }
   .ex-name{
-    font-family:'Archivo Black', sans-serif;
+    font-family:'Open Sans', sans-serif;
+    font-weight:700;
     font-size:16px;
     line-height:1.25;
     text-transform:uppercase;
@@ -167,7 +173,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
     text-align:right;
   }
   .ex-dose .num{
-    font-family:'Archivo Black', sans-serif;
+    font-family:'Open Sans', sans-serif;
+    font-weight:700;
     font-size:20px;
     color:var(--lime);
     line-height:1;
@@ -213,7 +220,7 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
     gap:6px;
     font-size:12px;
     font-weight:700;
-    color:#101012;
+    color:var(--bg);
     background:var(--lime);
     border:none;
     padding:8px 12px;
@@ -232,7 +239,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
     padding:18px;
   }
   .tracker h2{
-    font-family:'Archivo Black', sans-serif;
+    font-family:'Open Sans', sans-serif;
+    font-weight:700;
     font-size:14px;
     text-transform:uppercase;
     margin:0 0 4px;
@@ -254,7 +262,7 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
   .box.checked{
     background:var(--lime);
     border-color:var(--lime);
-    color:#101012;
+    color:var(--bg);
     font-weight:800;
   }
 
