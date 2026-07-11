@@ -169,7 +169,7 @@ function buildBodyInner(){
   <div class="hero">
     <p class="brand"><span>STRONGER</span> AS FUCK</p>
     <h1>Pauta de<br><em>${tipoPauta}</em></h1>
-    <p style="font-family:'Archivo Black', sans-serif; font-size:15px; letter-spacing:0.04em; color:var(--ink-dim); margin:0 0 14px; text-transform:uppercase;">${nombrePaciente}</p>
+    <p style="font-family:'Open Sans', sans-serif; font-weight:700; font-size:15px; letter-spacing:0.04em; color:var(--ink-dim); margin:0 0 14px; text-transform:uppercase;">${nombrePaciente}</p>
     <p class="sub">${mensajeIntro}</p>
   </div>
 
@@ -259,13 +259,107 @@ function verPautaNuevaPestana(){
   win.document.close();
 }
 
+// ---------- descargar como PDF (misma vista, vía librería html2pdf.js) ----------
+function descargarPDF(){
+  const html = buildFullHTML();
+  const nombrePaciente = document.getElementById('nombrePaciente').value;
+
+  if(typeof html2pdf === 'undefined'){
+    alert('No se pudo cargar el generador de PDF (revisa tu conexión a internet e inténtalo de nuevo).');
+    return;
+  }
+
+  // Renderizamos la pauta en un iframe oculto para que aplique su CSS/tipografía
+  // real (html2pdf necesita un elemento del DOM ya "vivo", no solo el string).
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'fixed';
+  iframe.style.left = '-99999px';
+  iframe.style.top = '0';
+  iframe.style.width = '660px';
+  iframe.style.height = '100px';
+  iframe.style.border = '0';
+  document.body.appendChild(iframe);
+
+  iframe.onload = () => {
+    const target = iframe.contentDocument.querySelector('.wrap') || iframe.contentDocument.body;
+    // ajustamos el alto del iframe al contenido real para que html2canvas capture todo
+    iframe.style.height = target.scrollHeight + 'px';
+
+    const opciones = {
+      margin: 0,
+      filename: 'Pauta_' + slug(nombrePaciente) + '.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, backgroundColor: '#10163F', useCORS: true, windowWidth: 660 },
+      jsPDF: { unit: 'px', format: [660, target.scrollHeight], orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    html2pdf().set(opciones).from(target).save().then(() => {
+      iframe.remove();
+    }).catch((err) => {
+      alert('Ocurrió un error generando el PDF: ' + err.message);
+      iframe.remove();
+    });
+  };
+
+  iframe.srcdoc = html;
+}
+
+// ---------- compartir nativo (WhatsApp / Mail / etc. vía Web Share API) ----------
+async function compartirPauta(){
+  const html = buildFullHTML();
+  const nombrePaciente = document.getElementById('nombrePaciente').value;
+  const filename = 'Pauta_' + slug(nombrePaciente) + '.html';
+  const file = new File([html], filename, { type: 'text/html' });
+
+  if(navigator.canShare && navigator.canShare({ files: [file] })){
+    try{
+      await navigator.share({
+        files: [file],
+        title: 'Pauta de ejercicios',
+        text: 'Te comparto tu pauta de ejercicios — Stronger As Fuck.'
+      });
+    }catch(err){
+      if(err.name !== 'AbortError'){
+        alert('No se pudo compartir: ' + err.message);
+      }
+    }
+  } else {
+    alert('Compartir directo solo funciona en navegadores de celular compatibles (Chrome/Safari en Android o iOS). En PC usa "Ver pauta" o "Descargar (PC)" y adjunta el archivo manualmente.');
+  }
+}
+
+// ---------- menú desplegable "Ver pauta / Compartir" ----------
+const verDropdown = document.getElementById('verDropdown');
+const verDropdownMenu = document.getElementById('verDropdownMenu');
+document.getElementById('verBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  verDropdownMenu.hidden = !verDropdownMenu.hidden;
+});
+document.addEventListener('click', (e) => {
+  if(!verDropdown.contains(e.target)){
+    verDropdownMenu.hidden = true;
+  }
+});
+document.getElementById('verNuevaPestanaBtn').addEventListener('click', () => {
+  verDropdownMenu.hidden = true;
+  verPautaNuevaPestana();
+});
+document.getElementById('descargarPdfBtn').addEventListener('click', () => {
+  verDropdownMenu.hidden = true;
+  descargarPDF();
+});
+document.getElementById('compartirBtn').addEventListener('click', () => {
+  verDropdownMenu.hidden = true;
+  compartirPauta();
+});
+
 // ---------- inicialización ----------
 document.getElementById('addSeccionBtn').addEventListener('click', () => {
   crearSeccionBlock({});
   actualizarPreview();
 });
 document.getElementById('downloadBtn').addEventListener('click', descargarHTML);
-document.getElementById('verBtn').addEventListener('click', verPautaNuevaPestana);
 
 document.querySelectorAll('#tipoPauta, #nombrePaciente, #mensajeIntro, #frecuencia, #duracion, #tiempoAprox, #porQue, #notaDescanso, #numSemanas, #sesionesPorSemana, #notaImportante, #despedida')
   .forEach(inp => inp.addEventListener('input', actualizarPreviewDebounced));

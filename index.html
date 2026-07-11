@@ -14,10 +14,17 @@
       <p>Rellena los campos, revisa la vista previa y descarga el HTML listo para enviar</p>
     </div>
     <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-      <button class="download-btn" id="verBtn">👁 Ver pauta / Compartir</button>
+      <div class="ver-dropdown" id="verDropdown">
+        <button class="download-btn" id="verBtn" type="button">👁 Ver pauta / Compartir ▾</button>
+        <div class="ver-dropdown-menu" id="verDropdownMenu" hidden>
+          <button type="button" class="ver-dropdown-item" id="verNuevaPestanaBtn">👁 Ver pauta (pestaña nueva)</button>
+          <button type="button" class="ver-dropdown-item" id="descargarPdfBtn">📄 Descargar PDF</button>
+          <button type="button" class="ver-dropdown-item" id="compartirBtn">📤 Compartir (WhatsApp / Mail…)</button>
+        </div>
+      </div>
       <button class="download-btn secondary-btn" id="downloadBtn">⬇ Descargar (PC)</button>
     </div>
-    <p class="mobile-hint">📱 En celular: usa "Ver pauta / Compartir" y desde esa pestaña usa el botón de Compartir/Guardar de tu navegador.</p>
+    <p class="mobile-hint">📱 En celular: usa "Ver pauta / Compartir" → "Compartir" para enviarla directo por WhatsApp o Mail, o "Descargar PDF" para guardarla como PDF.</p>
   </div>
 
   <div class="layout">
@@ -97,6 +104,7 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="assets/logo.js"></script>
 <script src="assets/pauta-template.js"></script>
 <script src="app.js"></script>

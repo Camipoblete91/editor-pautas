@@ -12,8 +12,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
 <style>
   :root{
     --bg: #10163F;
-    --card: #1b1b1e;
-    --card-border: #2c2c30;
+    --card: #1A2050;
+    --card-border: #2C3568;
     --ink: #f4f3ef;
     --ink-dim: #a9a8ab;
     --lime: #B08CFA;
