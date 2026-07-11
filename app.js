@@ -259,50 +259,101 @@ function verPautaNuevaPestana(){
   win.document.close();
 }
 
-// ---------- descargar como PDF (misma vista, vía librería html2pdf.js) ----------
-function descargarPDF(){
-  const html = buildFullHTML();
-  const nombrePaciente = document.getElementById('nombrePaciente').value;
+// ---------- preparar el CSS de la pauta para poder inyectarlo en el documento del editor ----------
+// Nota: html2canvas necesita que el elemento a capturar esté en el MISMO documento desde el
+// que se llama (si se renderiza dentro de un <iframe> con srcdoc, getComputedStyle no logra
+// leer bien los estilos "cruzando" documentos, y el resultado sale sin diseño / en blanco).
+// Por eso, en vez de un iframe, inyectamos el CSS de la pauta directo en este documento, pero
+// "encapsulado" bajo el selector #pdf-render-root para que no choque con el estilo del editor
+// (que también define :root y body con otros valores).
+let pdfCssInyectado = false;
+function inyectarEstilosPDF(){
+  if(pdfCssInyectado) return;
+  const match = PLANTILLA_HEAD.match(/<style>([\s\S]*?)<\/style>/);
+  if(!match) return;
+  const cssEscapado = match[1]
+    .replace(':root{', '#pdf-render-root{')
+    .replace('body{', '#pdf-render-root{')
+    .replace('*{box-sizing:border-box;}', '#pdf-render-root, #pdf-render-root *{box-sizing:border-box;}');
+  const styleTag = document.createElement('style');
+  styleTag.id = 'pdf-render-style';
+  styleTag.textContent = cssEscapado;
+  document.head.appendChild(styleTag);
 
+  // mismas fuentes que usa la pauta (Open Sans), para que estén disponibles en este documento
+  const fontLink = document.createElement('link');
+  fontLink.rel = 'stylesheet';
+  fontLink.href = 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap';
+  document.head.appendChild(fontLink);
+
+  pdfCssInyectado = true;
+}
+
+// ---------- descargar como PDF (misma vista, vía librería html2pdf.js) ----------
+async function descargarPDF(){
   if(typeof html2pdf === 'undefined'){
     alert('No se pudo cargar el generador de PDF (revisa tu conexión a internet e inténtalo de nuevo).');
     return;
   }
 
-  // Renderizamos la pauta en un iframe oculto para que aplique su CSS/tipografía
-  // real (html2pdf necesita un elemento del DOM ya "vivo", no solo el string).
-  const iframe = document.createElement('iframe');
-  iframe.style.position = 'fixed';
-  iframe.style.left = '-99999px';
-  iframe.style.top = '0';
-  iframe.style.width = '660px';
-  iframe.style.height = '100px';
-  iframe.style.border = '0';
-  document.body.appendChild(iframe);
+  inyectarEstilosPDF();
 
-  iframe.onload = () => {
-    const target = iframe.contentDocument.querySelector('.wrap') || iframe.contentDocument.body;
-    // ajustamos el alto del iframe al contenido real para que html2canvas capture todo
-    iframe.style.height = target.scrollHeight + 'px';
+  const ANCHO = 640;
+  const nombrePaciente = document.getElementById('nombrePaciente').value;
+
+  // IMPORTANTE: html2canvas mide mal (altura 0) los elementos con position:fixed/absolute,
+  // sin importar el offset usado. Por eso el contenido a capturar ("root") se deja con
+  // position estática (normal, dentro del flujo del documento) y en cambio se oculta
+  // metiéndolo dentro de un "clipper" fixed de 0x0 con overflow:hidden.
+  const clipper = document.createElement('div');
+  clipper.style.position = 'fixed';
+  clipper.style.left = '0';
+  clipper.style.top = '0';
+  clipper.style.width = '0';
+  clipper.style.height = '0';
+  clipper.style.overflow = 'hidden';
+
+  const root = document.createElement('div');
+  root.id = 'pdf-render-root';
+  root.className = 'wrap';
+  root.style.width = ANCHO + 'px';
+  root.innerHTML = buildBodyInner();
+  clipper.appendChild(root);
+  document.body.appendChild(clipper);
+
+  const limpiar = () => clipper.remove();
+
+  try{
+    if(document.fonts && document.fonts.ready){
+      await document.fonts.ready;
+    }
+    // pequeño respiro extra para que el layout/paint termine de asentarse
+    await new Promise(r => setTimeout(r, 300));
 
     const opciones = {
       margin: 0,
       filename: 'Pauta_' + slug(nombrePaciente) + '.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, backgroundColor: '#10163F', useCORS: true, windowWidth: 660 },
-      jsPDF: { unit: 'px', format: [660, target.scrollHeight], orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      html2canvas: {
+        scale: 2,
+        backgroundColor: '#010016',
+        useCORS: true,
+        windowWidth: ANCHO,
+        width: ANCHO,
+        scrollX: 0,
+        scrollY: 0
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'], avoid: ['.ex-card', '.chip', '.tracker', '.callout', '.footer-note'] }
     };
 
-    html2pdf().set(opciones).from(target).save().then(() => {
-      iframe.remove();
-    }).catch((err) => {
-      alert('Ocurrió un error generando el PDF: ' + err.message);
-      iframe.remove();
-    });
-  };
-
-  iframe.srcdoc = html;
+    await html2pdf().set(opciones).from(root).save();
+    limpiar();
+  }catch(err){
+    console.error('descargarPDF error:', err && err.stack ? err.stack : err);
+    alert('Ocurrió un error generando el PDF: ' + err.message);
+    limpiar();
+  }
 }
 
 // ---------- compartir nativo (WhatsApp / Mail / etc. vía Web Share API) ----------

@@ -11,7 +11,7 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #10163F;
+    --bg: #010016;
     --card: #1A2050;
     --card-border: #2C3568;
     --ink: #f4f3ef;
@@ -37,9 +37,8 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
   /* HEADER */
   .hero{
     padding:36px 24px 28px;
-    background:
-      radial-gradient(circle at 15% -10%, rgba(176,140,250,0.18), transparent 55%),
-      var(--bg);
+    background-color: var(--bg);
+    background-image: radial-gradient(circle at 15% -10%, rgba(176,140,250,0.18), transparent 55%);
     border-bottom:1px solid var(--card-border);
   }
   .brand{
