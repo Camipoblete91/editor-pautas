@@ -167,6 +167,7 @@ function buildBodyInner(){
 
   return `
   <div class="hero">
+    ${LOGO_CARITA_IMG_TAG}
     <p class="brand"><span>STRONGER</span> AS FUCK</p>
     <h1>Pauta de<br><em>${tipoPauta}</em></h1>
     <p style="font-family:'Open Sans', sans-serif; font-weight:700; font-size:15px; letter-spacing:0.04em; color:var(--ink-dim); margin:0 0 14px; text-transform:uppercase;">${nombrePaciente}</p>
@@ -421,5 +422,9 @@ document.getElementById('notaDescanso').value = 'El descanso lo vas viendo tú, 
 
 // una sección de ejemplo para partir
 crearSeccionBlock({nombre:'Movilidad', ejercicios:[{}]});
+
+// logo en la esquina superior derecha del editor
+const logoSlot = document.getElementById('logoCornerSlot');
+if(logoSlot) logoSlot.innerHTML = LOGO_CARITA_IMG_TAG;
 
 actualizarPreview();

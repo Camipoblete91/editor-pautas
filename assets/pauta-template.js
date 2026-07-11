@@ -36,10 +36,19 @@ const PLANTILLA_HEAD = `<!DOCTYPE html>
 
   /* HEADER */
   .hero{
+    position:relative;
     padding:36px 24px 28px;
     background-color: var(--bg);
     background-image: radial-gradient(circle at 15% -10%, rgba(176,140,250,0.18), transparent 55%);
     border-bottom:1px solid var(--card-border);
+  }
+  .hero-logo-corner{
+    position:absolute;
+    top:18px;
+    right:20px;
+    width:42px;
+    height:auto;
+    display:block;
   }
   .brand{
     font-family:'Open Sans', sans-serif;
