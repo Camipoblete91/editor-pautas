@@ -156,7 +156,7 @@ function buildBodyInner(){
   for(let w=1; w<=numSemanas; w++){
     let boxesHTML = '';
     for(let s=1; s<=sesionesPorSemana; s++){
-      boxesHTML += `<div class="box" onclick="this.classList.toggle('checked'); this.textContent=this.classList.contains('checked')?'✓':''">${s}</div>`;
+      boxesHTML += `<div class="box" data-num="${s}" onclick="this.classList.toggle('checked'); this.textContent=this.classList.contains('checked')?'✓':this.dataset.num">${s}</div>`;
     }
     weeksHTML += `
       <div class="week-row">
